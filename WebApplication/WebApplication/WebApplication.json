@@ -89,6 +89,23 @@
       ],
       "dependsOn": [
       ]
+    },
+    {
+      "type": "microsoft.insights/components",
+      "name": "[variables('AppName')]",
+      "apiVersion": "2014-04-01",
+      "location": "East US",
+      "tags": {
+        "displayName": "Application Insights",
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('AppName'))]": "Resource"
+      },
+      "properties": {
+        "ApplicationId": "[variables('AppName')]",
+        "Request_Source": "IbizaWebAppExtensionCreate"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Web/sites/', variables('AppName'))]"
+      ]
     }
   ],
   "outputs": {

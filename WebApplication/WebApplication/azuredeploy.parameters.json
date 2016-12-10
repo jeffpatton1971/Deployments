@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "fqdn": {
-            "value": "dev.kansaspattons.org"
+            "value": "dev.pattontech.com"
         },
         "PlanName": {
             "value": "devappplan"
