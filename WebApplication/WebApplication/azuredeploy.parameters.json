@@ -2,11 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "name": {
-            "value": "devwebapptesting"
-        },
-        "hostnname": {
-            "value": "dev.webapptesting.com"
+        "fqdn": {
+            "value": "dev.kansaspattons.org"
         },
         "PlanName": {
             "value": "devappplan"
