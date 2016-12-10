@@ -2,5 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "name": {
+            "value": "devwebapptesting"
+        },
+        "hostnname": {
+            "value": "dev.webapptesting.com"
+        },
+        "PlanName": {
+            "value": "devappplan"
+        },
+        "StorageAccountName": {
+            "value": "devapplicationtest"
+        },
+      "templateLocation": {
+        "value": "https://raw.githubusercontent.com/jeffpatton1971/Deployments/master/WebApplication/WebApplication"
+      }
     }
 }
