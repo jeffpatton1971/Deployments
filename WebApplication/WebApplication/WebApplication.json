@@ -2,13 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "name": {
-      "type": "string",
-      "metadata": {
-        "template": "WebApplication.json"
-      }
-    },
-    "hostnname": {
+    "fqdn": {
       "type": "string",
       "metadata": {
         "template": "WebApplication.json"
@@ -22,12 +16,13 @@
     }
   },
   "variables": {
-    "resourceGroup": "[resourceGroup()]"
+    "resourceGroup": "[resourceGroup()]",
+    "AppName": "[replace(parameters('fqdn'),'.','')]"
   },
   "resources": [
     {
       "type": "Microsoft.Web/sites",
-      "name": "[parameters('name')]",
+      "name": "[variables('AppName')]",
       "apiVersion": "2015-08-01",
       "location": "[variables('resourceGroup').location]",
       "tags": {
@@ -36,32 +31,32 @@
       },
       "properties": {
         "enabledHostNames": [
-          "[parameters('hostnname')]",
-          "[concat(parameters('name'),'.azurewebsites.net')]",
-          "[concat(parameters('name'),'.scm.azurewebsites.net')]"
+          "[parameters('fqdn')]",
+          "[concat(variables('AppName'),'.azurewebsites.net')]",
+          "[concat(variables('AppName'),'.scm.azurewebsites.net')]"
         ],
         "hostNames": [
-          "[parameters('hostnname')]",
-          "[concat(parameters('name'),'.azurewebsites.net')]"
+          "[parameters('fqdn')]",
+          "[concat(variables('AppName'),'.azurewebsites.net')]"
         ],
         "hostNameSslStates": [
           {
-            "name": "[parameters('hostnname')]",
+            "name": "[parameters('fqdn')]",
             "sslState": 0,
             "ipBasedSslState": 0
           },
           {
-            "name": "[concat(parameters('name'),'.azurewebsites.net')]",
+            "name": "[concat(variables('AppName'),'.azurewebsites.net')]",
             "sslState": 0,
             "ipBasedSslState": 0
           },
           {
-            "name": "[concat(parameters('name'),'.scm.azurewebsites.net')]",
+            "name": "[concat(variables('AppName'),'.scm.azurewebsites.net')]",
             "sslState": 0,
             "ipBasedSslState": 0
           }
         ],
-        "name": "[parameters('name')]",
+        "name": "[variables('AppName')]",
         "serverFarmId": "[concat(parameters('AppServicePlanId'))]",
         "siteConfig": {
           "appSettings": [
@@ -88,7 +83,7 @@
             "IsManualIntegration": true
           },
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+            "[resourceId('Microsoft.Web/Sites', variables('AppName'))]"
           ]
         }
       ],

@@ -2,13 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "name": {
-      "type": "string",
-      "metadata": {
-        "template": "WebApplication.json"
-      }
-    },
-    "hostnname": {
+    "fqdn": {
       "type": "string",
       "metadata": {
         "template": "WebApplication.json"
@@ -108,7 +102,9 @@
       "name": "AppServicePlanDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "dependsOn": [ ],
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/StorageAccountDeployment')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -132,7 +128,9 @@
       "name": "WebApplicationDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "dependsOn": [ ],
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/AppServicePlanDeployment')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -140,11 +138,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "name": {
-            "value": "[parameters('name')]"
-          },
-          "hostnname": {
-            "value": "[parameters('hostnname')]"
+          "fqdn": {
+            "value": "[parameters('fqdn')]"
           },
           "AppServicePlanId": {
             "value": "[reference('AppServicePlanDeployment').outputs.resourceId.value]"
