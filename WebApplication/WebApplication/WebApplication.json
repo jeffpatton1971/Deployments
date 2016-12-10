@@ -30,32 +30,6 @@
         "[concat('hidden-related:', parameters('AppServicePlanId'))]": "empty"
       },
       "properties": {
-        "enabledHostNames": [
-          "[parameters('fqdn')]",
-          "[concat(variables('AppName'),'.azurewebsites.net')]",
-          "[concat(variables('AppName'),'.scm.azurewebsites.net')]"
-        ],
-        "hostNames": [
-          "[parameters('fqdn')]",
-          "[concat(variables('AppName'),'.azurewebsites.net')]"
-        ],
-        "hostNameSslStates": [
-          {
-            "name": "[parameters('fqdn')]",
-            "sslState": 0,
-            "ipBasedSslState": 0
-          },
-          {
-            "name": "[concat(variables('AppName'),'.azurewebsites.net')]",
-            "sslState": 0,
-            "ipBasedSslState": 0
-          },
-          {
-            "name": "[concat(variables('AppName'),'.scm.azurewebsites.net')]",
-            "sslState": 0,
-            "ipBasedSslState": 0
-          }
-        ],
         "name": "[variables('AppName')]",
         "serverFarmId": "[concat(parameters('AppServicePlanId'))]",
         "siteConfig": {
@@ -106,6 +80,20 @@
       "dependsOn": [
         "[concat('Microsoft.Web/sites/', variables('AppName'))]"
       ]
+    },
+    {
+      "name": "[concat(variables('AppName'),'/',parameters('fqdn'))]",
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "location": "West Europe",
+      "dependsOn": [
+        "[concat('Microsoft.Web/sites/', variables('AppName'))]"
+      ],
+      "properties": {
+        "siteName": "[variables('AppName')]",
+        "domainId": null,
+        "hostNameType": "Verified"
+      }
     }
   ],
   "outputs": {
