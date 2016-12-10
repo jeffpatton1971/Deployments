@@ -1,0 +1,63 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "StorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    },
+    "StorageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    },
+    "encryptionEnabled": {
+      "defaultValue": false,
+      "type": "bool",
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    }
+  },
+  "variables": {
+    "resourceGroup": "[resourceGroup()]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('StorageAccountType')]"
+      },
+      "kind": "Storage",
+      "name": "[parameters('storageaccountname')]",
+      "tags": {
+        "displayName": "Storage Account"
+      },
+      "apiVersion": "2016-01-01",
+      "location": "[variables('resourceGroup').location]",
+      "properties": {
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": "[parameters('encryptionEnabled')]"
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

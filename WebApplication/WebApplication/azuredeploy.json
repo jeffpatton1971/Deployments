@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "template": "WebApplication.json"
+      }
+    },
+    "hostnname": {
+      "type": "string",
+      "metadata": {
+        "template": "WebApplication.json"
+      }
+    },
+    "PlanName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "template": "AppServicePlan.json"
+      }
+    },
+    "PlanSKU": {
+      "type": "string",
+      "allowedValues": [
+        "Free",
+        "Shared",
+        "Basic",
+        "Standard"
+      ],
+      "defaultValue": "Free",
+      "metadata": {
+        "template": "AppServicePlan.json"
+      }
+    },
+    "PlanWorkerSize": {
+      "type": "string",
+      "allowedValues": [
+        "0",
+        "1",
+        "2"
+      ],
+      "defaultValue": "0",
+      "metadata": {
+        "template": "AppServicePlan.json"
+      }
+    },
+    "StorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    },
+    "StorageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    },
+    "encryptionEnabled": {
+      "defaultValue": false,
+      "type": "bool",
+      "metadata": {
+        "template": "StorageAccount.json"
+      }
+    },
+    "templateLocation": {
+      "type": "string"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "StorageAccountDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('templateLocation'), '/StorageAccount.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "StorageAccountName": {
+            "value": "[parameters('StorageAccountName')]"
+          },
+          "StorageAccountType": {
+            "value": "[parameters('StorageAccountType')]"
+          },
+          "encryptionEnabled": {
+            "value": "[parameters('encryptionEnabled')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "AppServicePlanDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('templateLocation'), '/AppServicePlan.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "PlanName": {
+            "value": "[parameters('PlanName')]"
+          },
+          "PlanSKU": {
+            "value": "[parameters('PlanSKU')]"
+          },
+          "PlanWorkerSize": {
+            "value": "[parameters('PlanWorkerSize')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "WebApplicationDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('templateLocation'), '/WebApplication.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "name": {
+            "value": "[parameters('name')]"
+          },
+          "hostnname": {
+            "value": "[parameters('hostnname')]"
+          },
+          "AppServicePlanId": {
+            "value": "[reference('AppServicePlanDeployment').outputs.resourceId.value]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

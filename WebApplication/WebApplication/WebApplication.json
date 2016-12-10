@@ -1,0 +1,101 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "template": "WebApplication.json"
+      }
+    },
+    "hostnname": {
+      "type": "string",
+      "metadata": {
+        "template": "WebApplication.json"
+      }
+    },
+    "AppServicePlanId": {
+      "type": "string",
+      "metadata": {
+        "template": "WebApplication.json"
+      }
+    }
+  },
+  "variables": {
+    "resourceGroup": "[resourceGroup()]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/sites",
+      "name": "[parameters('name')]",
+      "apiVersion": "2015-08-01",
+      "location": "[variables('resourceGroup').location]",
+      "tags": {
+        "displayName": "Web Application",
+        "[concat('hidden-related:', parameters('AppServicePlanId'))]": "empty"
+      },
+      "properties": {
+        "enabledHostNames": [
+          "[parameters('hostnname')]",
+          "[concat(parameters('name'),'.azurewebsites.net')]",
+          "[concat(parameters('name'),'.scm.azurewebsites.net')]"
+        ],
+        "hostNames": [
+          "[parameters('hostnname')]",
+          "[concat(parameters('name'),'.azurewebsites.net')]"
+        ],
+        "hostNameSslStates": [
+          {
+            "name": "[parameters('hostnname')]",
+            "sslState": 0,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "[concat(parameters('name'),'.azurewebsites.net')]",
+            "sslState": 0,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "[concat(parameters('name'),'.scm.azurewebsites.net')]",
+            "sslState": 0,
+            "ipBasedSslState": 0
+          }
+        ],
+        "name": "[parameters('name')]",
+        "serverFarmId": "[concat(parameters('AppServicePlanId'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "PHPMYADMIN_EXTENSION_VERSION",
+              "value": "latest"
+            }
+          ],
+          "phpVersion": "5.6",
+          "localMySqlEnabled": true
+        }
+      },
+      "resources": [
+        {
+          "type": "sourcecontrols",
+          "name": "web",
+          "tags": {
+            "displayName": "Source Control"
+          },
+          "apiVersion": "2016-03-01",
+          "properties": {
+            "RepoUrl": "https://github.com/azureappserviceoss/wordpress-azure",
+            "branch": "master",
+            "IsManualIntegration": true
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+          ]
+        }
+      ],
+      "dependsOn": [
+      ]
+    }
+  ],
+  "outputs": {
+  }
+}
