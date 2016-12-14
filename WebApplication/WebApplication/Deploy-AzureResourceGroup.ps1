@@ -33,6 +33,10 @@ $OptionalParameters = New-Object -TypeName Hashtable
 $TemplateFile = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $TemplateFile))
 $TemplateParametersFile = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $TemplateParametersFile))
 
+$TemplateObject = (Get-Content -Path $TemplateFile) |ConvertFrom-Json
+$fqdn = $TemplateObject.parameters.fqdn.value
+$AppName = $fqdn.Replace('.','')
+
 if ($UploadArtifacts) {
     # Convert relative paths to absolute paths if needed
     $ArtifactStagingDirectory = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $ArtifactStagingDirectory))
@@ -134,6 +138,9 @@ else {
                                        @OptionalParameters `
                                        -Force -Verbose `
                                        -ErrorVariable ErrorMessages
+
+	Restart-AzureRmWebApp -ResourceGroupName $ResourceGroupName -Name $AppName
+	
     $ErrorMessages = $ErrorMessages | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") }
 }
 if ($ErrorMessages)

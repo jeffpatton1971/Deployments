@@ -1,0 +1,33 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fqdn": {
+      "type": "string",
+      "metadata": {
+        "template": "hostnames.json"
+      }
+    }
+  },
+  "variables": {
+    "resourceGroup": "[resourceGroup()]",
+    "AppName": "[replace(parameters('fqdn'),'.','')]"
+  },
+  "resources": [
+    {
+      "name": "[concat(variables('AppName'),'/',parameters('fqdn'))]",
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "location": "[variables('resourceGroup').location]",
+      "dependsOn": [
+      ],
+      "properties": {
+        "siteName": "[variables('AppName')]",
+        "domainId": null,
+        "hostNameType": "Verified"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

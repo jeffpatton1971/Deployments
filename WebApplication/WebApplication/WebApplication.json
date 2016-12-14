@@ -80,21 +80,7 @@
       "dependsOn": [
         "[concat('Microsoft.Web/sites/', variables('AppName'))]"
       ]
-    },
-    {
-      "name": "[concat(variables('AppName'),'/',parameters('fqdn'))]",
-      "apiVersion": "2015-08-01",
-      "type": "Microsoft.Web/sites/hostNameBindings",
-      "location": "West Europe",
-      "dependsOn": [
-        "[concat('Microsoft.Web/sites/', variables('AppName'))]"
-      ],
-      "properties": {
-        "siteName": "[variables('AppName')]",
-        "domainId": null,
-        "hostNameType": "Verified"
-      }
-    }
+    }    
   ],
   "outputs": {
   }

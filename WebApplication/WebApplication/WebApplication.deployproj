@@ -32,6 +32,7 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <None Include="hostnames.json" />
     <None Include="StorageAccount.json" />
     <None Include="WebApplication.json" />
   </ItemGroup>
