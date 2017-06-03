@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "fqdn": {
-            "value": "dev.pattontech.com"
+            "value": "www.kansaspattons.org"
         },
         "PlanName": {
-            "value": "devappplan"
+            "value": "prdappplan"
         },
         "StorageAccountName": {
-            "value": "devapplicationtest"
+            "value": "prdwebappstorage"
         },
       "templateLocation": {
         "value": "https://raw.githubusercontent.com/jeffpatton1971/Deployments/master/WebApplication/WebApplication"
